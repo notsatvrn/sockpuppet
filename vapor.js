@@ -61,7 +61,7 @@ class vapor {
 
   send_message({msg}) {
     if (wss != null) {
-     wss.send(String(msg)) ;
+      wss.send(String(msg));
     };
   };
 };
