@@ -3,17 +3,20 @@ var wss = null;
 var connected = false;
 var message = "";
 var username = "";
-var password= "";
+var password = "";
 
 // Class
 class vapor {
+	constructor(runtime) {
+		this.runtime = runtime;
+	};
 	static get STATE_KEY() {
 		return "Scratch.websockets";
 	};
   getInfo() {
     return {
       id: "vapor",
-      name: "Vapor",
+      name: "vapor",
       blocks: [
       {
         opcode: "connect_to_server",
@@ -47,6 +50,7 @@ class vapor {
     };
   };
 
+  // Connect To Server - Command
   connect_to_server({url}) {
     wss = new WebSocket(url);
     wss.onopen = function() {
@@ -58,16 +62,19 @@ class vapor {
     };
   };
 
+  // Current Message - Reporter
   get_current_message() {
     return message;
   };
 
+  // Send Message - Command
   send_message({msg}) {
     if (wss != null) {
       wss.send(String(msg));
     };
   };
 
+  // Disconnect From Server - Command
   disconnect_from_server() {
     if (wss != null) {
       wss.send("close_conn")
@@ -81,4 +88,5 @@ class vapor {
   };
 };
 
+// Register Extension
 Scratch.extensions.register(new vapor());
