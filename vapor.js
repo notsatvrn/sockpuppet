@@ -84,10 +84,11 @@ class vapor {
   decode_list_line({line, data}) {
     decoded_line = "";
     split_data = data.split("99");
-    data_len = split_data[line-1].length / 2;
+    data_line = String(split_data[line-1]);
+    data_len = data_line.length / 2;
     for (decode_i = 0; decode_i < data_len; decode_i++) {
-      current_char = split_data[line-1].charAt(decode_i*2) + split_data[line-1].charAt((decode_i*2) + 1);
-      decoded_line += chars[parseInt(current_char)-1];
+      current_char = data_line.charAt(decode_i*2) + data_line.charAt((decode_i*2) + 1);
+      decoded_line += chars[Number(current_char)-1];
     };
     return decoded_line;
   };
