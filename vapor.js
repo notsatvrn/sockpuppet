@@ -27,7 +27,7 @@ class vapor {
     }
   }
     
-  connectToServer(url) {
+  connectToServer({url}) {
     wss = new WebSocket(url)
     wss.onopen = function(e) {
       wss.send("new connection")
