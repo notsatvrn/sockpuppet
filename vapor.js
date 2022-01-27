@@ -34,6 +34,7 @@ class vapor {
         opcode: "new_message_received",
         blockType: Scratch.BlockType.HAT,
         text: "when a new message is received",
+        isEdgeActivated: false,
       }],
     }
   };
