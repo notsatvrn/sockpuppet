@@ -69,14 +69,14 @@ class vapor {
 
   // Send Message - Command
   send_message({msg}) {
-    if (wss != null) {
+    if (wss != null && connected) {
       wss.send(String(msg));
     };
   };
 
   // Disconnect From Server - Command
   disconnect_from_server() {
-    if (wss != null) {
+    if (connected) {
       wss.send("close_conn")
       wss.close(1000);
       connected = false;
