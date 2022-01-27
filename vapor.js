@@ -82,7 +82,7 @@ class vapor {
   // Decode Line ___ From Encoded Data ___ - Reporter 
   decode_list_line({line, data}) {
     decoded_line = "";
-    split_data = data.split("99");
+    split_data = String(data).split("99");
     for (decode_i = 0; decode_i < split_data[line-1]/2; decode_i++) {
       current_char = split_data[line-1].charAt(decode_i*2) + split_data[line-1].charAt((decode_i*2) + 1);
       decoded_line += chars[current_char]
