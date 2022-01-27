@@ -5,11 +5,6 @@ var message = "";
 var username = "";
 var password = "";
 var new_message = false;
-var decode_i = 1;
-var decoded_line = "";
-var current_char = 1;
-var data_len = 1;
-const chars = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, " ", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "-", "_", "=", "+", "|", "\\", "/", "?", ".", ",", ">", "<", "{", "}", "]", "[", ";", ":", ")", "(", "*", "&", "^", "%", "$", "#", "@", "!", "~", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
 // Class
 class vapor {
@@ -59,38 +54,11 @@ class vapor {
           },
         },
       }, {
-        opcode: "decode_list_line",
-        blockType: Scratch.BlockType.REPORTER,
-        text: "decoded line [line] from encoded data [data]",
-        arguments: {
-          line: {
-            type: Scratch.ArgumentType.NUMBER,
-            defaultValue: 1,
-          },
-          data: {
-            type: Scratch.ArgumentType.STRING,
-            defaultValue: "019901",
-          },
-        },
-      }, {
         opcode: "get_current_message",
         blockType: Scratch.BlockType.REPORTER,
         text: "current message",
       }],
     };
-  };
-
-  // Decode Line ___ From Encoded Data ___ - Reporter 
-  decode_list_line({line, data}) {
-    decoded_line = "";
-    split_data = data.split("99");
-    data_line = String(split_data[line-1]);
-    data_len = data_line.length / 2;
-    for (decode_i = 0; decode_i < data_len; decode_i++) {
-      current_char = data_line.charAt(decode_i*2) + data_line.charAt((decode_i*2) + 1);
-      decoded_line += chars[Number(current_char)-1];
-    };
-    return decoded_line;
   };
 
   // Connect To Server - Command
