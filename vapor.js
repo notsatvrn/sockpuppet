@@ -1,3 +1,5 @@
+var wss = null;
+
 class vapor {
   constructor(runtime, extensionId) {
     this.runtime = runtime;
@@ -11,13 +13,13 @@ class vapor {
       name: "Vapor",
       blocks: [
       {
-        opcode: "fetchURL",
+        opcode: "connectToServer",
         blockType: Scratch.BlockType.REPORTER,
-        text: "fetch data from [url]",
+        text: "connect to server [url]",
         arguments: {
           url: {
             type: Scratch.ArgumentType.STRING,
-            defaultValue: "https://api.weather.gov/stations/KNYC/observations",
+            defaultValue: "",
             },
           },
         }
@@ -25,22 +27,10 @@ class vapor {
     }
   }
     
-  fetchURL({url}) {
-    return fetch(url).then(response => response.text())
-  }
-
-  jsonExtract({name,data}) {
-    var parsed = JSON.parse(data)
-    if (name in parsed) {
-      var out = parsed[name]
-      var t = typeof(out)
-      if (t == "string" || t == "number")
-        return out
-      if (t == "boolean")
-        return t ? 1 : 0
-      return JSON.stringify(out)
-    } else {
-      return ""
+  connectToServer(url) {
+    wss = new WebSocket(url)
+    wss.onopen = function(e) {
+      wss.send("new connection")
     }
   }
 }
