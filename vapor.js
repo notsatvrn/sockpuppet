@@ -1,13 +1,12 @@
+// Variables
 var wss = null;
 var connected = false;
 var new_message = false;
 var message = "";
-var username = ""
+var username = "";
 
+// Class
 class vapor {
-  constructor(runtime, extensionId) {
-    this.runtime = runtime;
-  };
 	static get STATE_KEY() {
 		return "Scratch.websockets";
 	};
@@ -27,16 +26,21 @@ class vapor {
           },
         },
       }, {
+        opcode: "send_message",
+        blockType: Scratch.BlockType.COMMAND,
+        text: "send_message [msg]",
+        arguments: {
+          url: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: "apple",
+          },
+        },
+      }, {
         opcode: "get_current_message",
         blockType: Scratch.BlockType.REPORTER,
         text: "current message",
-      }, {
-        opcode: "new_message_received",
-        blockType: Scratch.BlockType.HAT,
-        text: "when a new message is received",
-        isEdgeActivated: false,
       }],
-    }
+    };
   };
     
   connect_to_server({url}) {
@@ -55,12 +59,9 @@ class vapor {
     return message;
   };
 
-  new_message_received() {
-    if (new_message) {
-      new_message = false;
-      return true;
-    } else {
-      return false;
+  send_message({msg}) {
+    if (wss != null) {
+     wss.send(String(msg)) ;
     };
   };
 };
