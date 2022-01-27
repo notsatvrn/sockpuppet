@@ -30,7 +30,7 @@ class vapor {
         blockType: Scratch.BlockType.COMMAND,
         text: "send_message [msg]",
         arguments: {
-          url: {
+          msg: {
             type: Scratch.ArgumentType.STRING,
             defaultValue: "apple",
           },
