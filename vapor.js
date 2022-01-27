@@ -47,7 +47,7 @@ class vapor {
     wss = new WebSocket(url);
     wss.onopen = function() {
       connected = true;
-      wss.send("new connection");
+      wss.send("new_conn");
     };
     wss.onmessage = function(event) {
       message = String(event.data);
