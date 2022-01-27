@@ -46,6 +46,12 @@ class vapor {
         opcode: "get_url_data",
         blockType: Scratch.BlockType.REPORTER,
         text: "get data from url [url]",
+        arguments: {
+          msg: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: "https://satyrnsstuff.github.io/vapor/list.txt",
+          },
+        },
       }, {
         opcode: "get_current_message",
         blockType: Scratch.BlockType.REPORTER,
