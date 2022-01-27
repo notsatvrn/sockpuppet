@@ -4,6 +4,11 @@ var connected = false;
 var message = "";
 var username = "";
 var password = "";
+var new_message = false;
+var decode_i = 1;
+var decode_i_2 = 1;
+var is_next_line = false;
+var decoded_line = "";
 
 // Class
 class vapor {
@@ -53,10 +58,37 @@ class vapor {
           },
         },
       }, {
+        opcode: "decode_list_line",
+        blockType: Scratch.BlockType.REPORTER,
+        text: "decoded line [line] from encoded data [data]",
+        arguments: {
+          line: {
+            type: Scratch.ArgumentType.NUMBER,
+            defaultValue: 1,
+          },
+          data: {
+            type: Scratch.ArgumentType.STRING,
+            defaultValue: "019901",
+          },
+        },
+      }, {
         opcode: "get_current_message",
         blockType: Scratch.BlockType.REPORTER,
         text: "current message",
       }],
+    };
+  };
+
+  // Decode Line ___ From Encoded Data ___ - Reporter 
+  decode_list_line({line, data}) {
+    decoded_line = "";
+    decode_i_2 = 1;
+    for (decode_i = 0; decode_i < line.length / 2; decode_i++) {
+      is_next_line = false;
+      while (Boolean(is_next_line)) {
+        is_next_line = data.charAt(decode_i_2 - 1) + data.charAt(decode_i_2) == "99";
+        decode_i_2 += 2;
+      };
     };
   };
 
@@ -69,7 +101,18 @@ class vapor {
     };
     wss.onmessage = function(event) {
       message = String(event.data);
+      new_message = true;
     };
+  };
+
+  // When New Message Recieved - Hat
+  when_new_message() {
+    if (Boolean(new_message)) {
+      new_message = false;
+      return true;
+    } else {
+      return false;
+    }
   };
 
   // Get Data From URL - Reporter
@@ -84,14 +127,14 @@ class vapor {
 
   // Send Message - Command
   send_message({msg}) {
-    if (wss != null && connected) {
+    if (wss != null && Boolean(connected)) {
       wss.send(String(msg));
     };
   };
 
   // Disconnect From Server - Command
   disconnect_from_server() {
-    if (connected) {
+    if (Boolean(connected)) {
       wss.send("close_conn")
       wss.close(1000);
       connected = false;
@@ -99,6 +142,7 @@ class vapor {
       username = "";
       password = "";
       wss = null;
+      new_message = false;
     };
   };
 };
