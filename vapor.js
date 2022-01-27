@@ -47,7 +47,7 @@ class vapor {
         blockType: Scratch.BlockType.REPORTER,
         text: "get data from url [url]",
         arguments: {
-          msg: {
+          url: {
             type: Scratch.ArgumentType.STRING,
             defaultValue: "https://satyrnsstuff.github.io/vapor/list.txt",
           },
