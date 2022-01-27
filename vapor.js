@@ -14,7 +14,7 @@ class vapor {
       blocks: [
       {
         opcode: "connectToServer",
-        blockType: Scratch.BlockType.REPORTER,
+        blockType: Scratch.BlockType.COMMAND,
         text: "connect to server [url]",
         arguments: {
           url: {
