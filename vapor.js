@@ -87,7 +87,7 @@ class vapor {
     data_len = split_data[line-1].length / 2;
     for (decode_i = 0; decode_i < data_len; decode_i++) {
       current_char = split_data[line-1].charAt(decode_i*2) + split_data[line-1].charAt((decode_i*2) + 1);
-      decoded_line += chars[current_char];
+      decoded_line += chars[parseInt(current_char)-1];
     };
     return decoded_line;
   };
