@@ -6,9 +6,9 @@ var username = "";
 var password = "";
 var new_message = false;
 var decode_i = 1;
-var decode_i_2 = 1;
-var is_next_line = false;
 var decoded_line = "";
+var current_char = 1;
+var chars = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, " ", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "-", "_", "=", "+", "|", "\\", "/", "?", ".", ",", ">", "<", "{", "}", "]", "[", ";", ":", ")", "(", "*", "&", "^", "%", "$", "#", "@", "!", "~", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
 // Class
 class vapor {
@@ -82,13 +82,10 @@ class vapor {
   // Decode Line ___ From Encoded Data ___ - Reporter 
   decode_list_line({line, data}) {
     decoded_line = "";
-    decode_i_2 = 1;
-    for (decode_i = 0; decode_i < line.length / 2; decode_i++) {
-      is_next_line = false;
-      while (Boolean(is_next_line)) {
-        is_next_line = data.charAt(decode_i_2 - 1) + data.charAt(decode_i_2) == "99";
-        decode_i_2 += 2;
-      };
+    split_data = data.split("99");
+    for (decode_i = 0; decode_i < split_data[line-1]/2; decode_i++) {
+      current_char = split_data[line-1].charAt(decode_i*2) + split_data[line-1].charAt((decode_i*2) + 1);
+      decoded_line += chars[current_char]
     };
   };
 
