@@ -19,7 +19,7 @@ class vapor {
         arguments: {
           url: {
             type: Scratch.ArgumentType.STRING,
-            defaultValue: "",
+            defaultValue: "ws://127.0.0.1:3000",
             },
           },
         }
