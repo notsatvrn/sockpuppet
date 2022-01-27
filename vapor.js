@@ -43,6 +43,10 @@ class vapor {
         blockType: Scratch.BlockType.COMMAND,
         text: "disconnect",
       }, {
+        opcode: "get_url_data",
+        blockType: Scratch.BlockType.REPORTER,
+        text: "get data from url [url]",
+      }, {
         opcode: "get_current_message",
         blockType: Scratch.BlockType.REPORTER,
         text: "current message",
@@ -60,6 +64,11 @@ class vapor {
     wss.onmessage = function(event) {
       message = String(event.data);
     };
+  };
+
+  // Get Data From URL - Reporter
+  get_url_data({url}) {
+    return fetch(url).then(response => response.text());
   };
 
   // Current Message - Reporter
