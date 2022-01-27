@@ -1,9 +1,9 @@
 // Variables
 var wss = null;
 var connected = false;
-var new_message = false;
 var message = "";
 var username = "";
+var password= "";
 
 // Class
 class vapor {
@@ -28,7 +28,7 @@ class vapor {
       }, {
         opcode: "send_message",
         blockType: Scratch.BlockType.COMMAND,
-        text: "send_message [msg]",
+        text: "send message [msg]",
         arguments: {
           msg: {
             type: Scratch.ArgumentType.STRING,
@@ -36,13 +36,17 @@ class vapor {
           },
         },
       }, {
+        opcode: "disconnect_from_server",
+        blockType: Scratch.BlockType.COMMAND,
+        text: "disconnect",
+      }, {
         opcode: "get_current_message",
         blockType: Scratch.BlockType.REPORTER,
         text: "current message",
       }],
     };
   };
-    
+
   connect_to_server({url}) {
     wss = new WebSocket(url);
     wss.onopen = function() {
@@ -51,7 +55,6 @@ class vapor {
     };
     wss.onmessage = function(event) {
       message = String(event.data);
-      new_message = true;
     };
   };
 
@@ -62,6 +65,17 @@ class vapor {
   send_message({msg}) {
     if (wss != null) {
       wss.send(String(msg));
+    };
+  };
+
+  disconnect_from_server() {
+    if (wss != null) {
+      wss.close(1000);
+      connected = false;
+      message = "";
+      username = "";
+      password = "";
+      wss = null;
     };
   };
 };
