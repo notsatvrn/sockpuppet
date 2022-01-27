@@ -70,6 +70,7 @@ class vapor {
 
   disconnect_from_server() {
     if (wss != null) {
+      wss.send("close_conn")
       wss.close(1000);
       connected = false;
       message = "";
