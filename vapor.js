@@ -31,7 +31,7 @@ class vapor {
         blockType: Scratch.BlockType.REPORTER,
         text: "current message",
       }, {
-        opcode: "new_message_recieved",
+        opcode: "new_message_received",
         blockType: Scratch.BlockType.HAT,
         text: "when new message received",
       }],
