@@ -30,6 +30,10 @@ class vapor {
         opcode: "get_current_message",
         blockType: Scratch.BlockType.REPORTER,
         text: "current message",
+      }, {
+        opcode: "new_message_recieved",
+        blockType: Scratch.BlockType.HAT,
+        text: "when new message received",
       }],
     }
   };
@@ -48,6 +52,15 @@ class vapor {
 
   get_current_message() {
     return message;
+  };
+
+  new_message_received() {
+    if (new_message) {
+      new_message = false;
+      return true;
+    } else {
+      return false;
+    };
   };
 };
 
