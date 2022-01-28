@@ -84,7 +84,8 @@ class vapor {
   connect_to_server({url}) {
     wss = new WebSocket(url);
     wss.onopen = function(e) {
-      wss.send("new_conn");
+      ip = String(fetch("https://api.meower.org/ip").then(response => response.text()))
+      wss.send("new_conn " + ip);
     };
     wss.onmessage = function(event) {
       message = String(event.data);
