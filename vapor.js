@@ -5,6 +5,7 @@ var message = "";
 var username = "";
 var password = "";
 var new_message = false;
+var old_message_state = false;
 
 // Class
 class vapor {
@@ -44,6 +45,15 @@ class vapor {
         blockType: Scratch.BlockType.COMMAND,
         text: "disconnect",
       }, {
+        opcode: "when_new_message",
+        blockType: Scratch.BlockType.HAT,
+        text: "when new message recieved",
+        isEdgeActivated: false,
+      }, {
+        opcode: "connected_to_server",
+        blockType: Scratch.BlockType.BOOLEAN,
+        text: "connected",
+      }, {
         opcode: "get_url_data",
         blockType: Scratch.BlockType.REPORTER,
         text: "get data from url [url]",
@@ -60,6 +70,11 @@ class vapor {
       }],
     };
   };
+
+  // Connected - Boolean
+  connected_to_server() {
+    return Boolean(connected);
+  }
 
   // Connect To Server - Command
   connect_to_server({url}) {
@@ -83,12 +98,9 @@ class vapor {
 
   // When New Message Recieved - Hat
   when_new_message() {
-    if (Boolean(new_message)) {
-      new_message = false;
-      return true;
-    } else {
-      return false;
-    }
+    old_message_state = new_message;
+    new_message = false;
+    return Boolean(old_message_state);
   };
 
   // Get Data From URL - Reporter
