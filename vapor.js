@@ -76,7 +76,7 @@ class vapor {
     if (wss != null && connected == true) {
       return true;
     } else {
-      return false
+      return false;
     };
   };
 
