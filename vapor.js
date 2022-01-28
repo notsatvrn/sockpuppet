@@ -73,8 +73,12 @@ class vapor {
 
   // Connected - Boolean
   connected_to_server() {
-    return Boolean(connected);
-  }
+    if (wss != null && connected == true) {
+      return true;
+    } else {
+      return false
+    };
+  };
 
   // Connect To Server - Command
   connect_to_server({url}) {
@@ -87,10 +91,9 @@ class vapor {
       if (message == "conn_deny") {
         disconnect_from_server();
       } else if (message == "conn_accept") {
-        message = "";
+        //message = "";
         connected = true;
       } else {
-        message = "";
         new_message = true;
       };
     };
