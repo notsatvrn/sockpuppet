@@ -1,11 +1,10 @@
 // Variables
 var wss = null
-var connected = false
+var connected = 0
 var message = ""
 var username = ""
 var password = ""
-var new_message = false
-var old_message_state = false
+var new_message = 0
 
 // Class
 class vapor {
@@ -72,7 +71,11 @@ class vapor {
 
   // Connected - Boolean
   connected_to_server() {
-    return get_boolean(connected)
+    if (connected == 1) {
+      return true
+    } else {
+      return false
+    }
   }
 
   // Connect To Server - Command
@@ -86,19 +89,21 @@ class vapor {
       if (message == "conn_deny") {
         disconnect_from_server()
       } else if (message == "conn_accept") {
-        connected = true
+        connected = 1
         message = ""
       } else {
-        new_message = true
+        new_message = 1
       }
     }
   }
 
   // When New Message Recieved - Hat
   when_new_message() {
-    old_message_state = new_message
-    new_message = false
-    return get_boolean(old_message_state)
+    if (new_message == 1) {
+      return true
+    } else {
+      return false
+    }
   }
 
   // Get Data From URL - Reporter
@@ -113,25 +118,14 @@ class vapor {
 
   // Send Message - Command
   send_message({msg}) {
-    if (get_boolean(connected)) {
+    if (connected == 1) {
       wss.send(String(msg))
-    };
-  }
-
-  // Boolean Tester
-  get_boolean(value) {
-    switch(value) {
-      case true:
-      case "true":
-        return true
-      default:
-        return false
     }
   }
 
   // Disconnect From Server - Command
   disconnect_from_server() {
-    if (get_boolean(connected)) {
+    if (connected == 1) {
       wss.send("close_conn")
       wss.close(1000)
       connected = false
