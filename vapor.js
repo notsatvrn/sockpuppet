@@ -44,10 +44,6 @@ class vapor {
         blockType: Scratch.BlockType.COMMAND,
         text: "disconnect",
       }, {
-        opcode: "when_new_message",
-        blockType: Scratch.BlockType.HAT,
-        text: "when new message recieved",
-      }, {
         opcode: "connected_to_server",
         blockType: Scratch.BlockType.BOOLEAN,
         text: "connected",
@@ -94,16 +90,6 @@ class vapor {
       } else {
         new_message = 1
       }
-    }
-  }
-
-  // When New Message Recieved - Hat
-  when_new_message() {
-    if (new_message == 1) {
-      new_message = 0
-      return true
-    } else {
-      return false
     }
   }
 
