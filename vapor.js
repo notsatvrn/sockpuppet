@@ -80,8 +80,8 @@ class vapor {
   connect_to_server({url}) {
     wss = new WebSocket(url);
     wss.onopen = function() {
-      connected = true;
-      wss.send("new_conn " + get_url_data({url: "https://api.meower.org/ip"}));
+      ip = String(fetch("https://api.meower.org/ip").then(response => response.text()))
+      wss.send("new_conn " + ip);
     };
     wss.onmessage = function(event) {
       message = String(event.data);
@@ -89,6 +89,7 @@ class vapor {
         disconnect_from_server();
       } else if (message == "conn_accept") {
         message = "";
+        connected = true;
       } else {
         message = "";
         new_message = true;
