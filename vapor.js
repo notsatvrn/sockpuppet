@@ -100,6 +100,7 @@ class vapor {
   // When New Message Recieved - Hat
   when_new_message() {
     if (new_message == 1) {
+      new_message = 0
       return true
     } else {
       return false
@@ -128,12 +129,12 @@ class vapor {
     if (connected == 1) {
       wss.send("close_conn")
       wss.close(1000)
-      connected = false
+      connected = 0
       message = ""
       username = ""
       password = ""
       wss = null
-      new_message = false
+      new_message = 0
     }
   }
 }
