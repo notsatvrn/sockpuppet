@@ -48,7 +48,6 @@ class vapor {
         opcode: "when_new_message",
         blockType: Scratch.BlockType.HAT,
         text: "when new message recieved",
-        isEdgeActivated: false,
       }, {
         opcode: "connected_to_server",
         blockType: Scratch.BlockType.BOOLEAN,
@@ -73,7 +72,7 @@ class vapor {
 
   // Connected - Boolean
   connected_to_server() {
-    if (wss != null && connected == true) {
+    if (wss != null && get_boolean(connected)) {
       return true;
     } else {
       return false;
@@ -84,8 +83,7 @@ class vapor {
   connect_to_server({url}) {
     wss = new WebSocket(url);
     wss.onopen = function(e) {
-      ip = String(fetch("https://api.meower.org/ip").then(response => response.text()))
-      wss.send("new_conn " + ip);
+      wss.send("new_conn");
     };
     wss.onmessage = function(event) {
       message = String(event.data);
@@ -104,7 +102,7 @@ class vapor {
   when_new_message() {
     old_message_state = new_message;
     new_message = false;
-    return Boolean(old_message_state);
+    return get_boolean(old_message_state);
   };
 
   // Get Data From URL - Reporter
@@ -119,14 +117,25 @@ class vapor {
 
   // Send Message - Command
   send_message({msg}) {
-    if (wss != null && Boolean(connected)) {
+    if (wss != null && get_boolean(connected)) {
       wss.send(String(msg));
+    };
+  };
+
+  // Boolean Tester
+  get_boolean(value) {
+    switch(value) {
+      case true:
+      case "true":
+        return true;
+      default:
+        return false;
     };
   };
 
   // Disconnect From Server - Command
   disconnect_from_server() {
-    if (Boolean(connected)) {
+    if (get_boolean(connected)) {
       wss.send("close_conn")
       wss.close(1000);
       connected = false;
