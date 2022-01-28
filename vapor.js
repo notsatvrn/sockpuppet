@@ -72,11 +72,7 @@ class vapor {
 
   // Connected - Boolean
   connected_to_server() {
-    if (wss != null && get_boolean(connected)) {
-      return true
-    } else {
-      return false
-    }
+    return get_boolean(connected)
   }
 
   // Connect To Server - Command
@@ -117,7 +113,7 @@ class vapor {
 
   // Send Message - Command
   send_message({msg}) {
-    if (wss != null && get_boolean(connected)) {
+    if (get_boolean(connected)) {
       wss.send(String(msg))
     };
   }
