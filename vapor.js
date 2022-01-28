@@ -4,7 +4,6 @@ var connected = 0
 var message = ""
 var username = ""
 var password = ""
-var new_message = 0
 
 // Class
 class vapor {
@@ -87,8 +86,6 @@ class vapor {
       } else if (message == "conn_accept") {
         connected = 1
         message = ""
-      } else {
-        new_message = 1
       }
     }
   }
