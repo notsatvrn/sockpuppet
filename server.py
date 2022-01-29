@@ -9,18 +9,23 @@ host = "0.0.0.0"
 clients = []
 clients_acc = []
 
+# Functions
+
+# Close a Connection
+async def close_conn(websocket):
+  await websocket.wait_closed()
+  if websocket in clients:
+    clients.remove(websocket)
+  print("connection closed")
+
 # Handle Connections
 async def handle_connections(websocket):
   try:
     data = await websocket.recv()
   except websockets.exceptions.ConnectionClosedOK:
-    if websocket in clients:
-      clients.remove(websocket)
-    print("connection closed")
+    await close_conn(websocket)
   except websockets.exceptions.ConnectionClosedError:
-    if websocket in clients:
-      clients.remove(websocket)
-    print("connection closed")
+    await close_conn(websocket)
   if data == "conn_new":
     await websocket.send("conn_accept")
     clients.append(websocket)
@@ -71,20 +76,15 @@ async def handle_connections(websocket):
                 clients_acc[clients.index(websocket)] = username
                 print(f"user '{username}' logged in")
         elif data == "conn_close":
-          await websocket.wait_closed()
-          clients.remove(websocket)
-          print("connection closed")
+          await close_conn(websocket)
     except websockets.exceptions.ConnectionClosedOK:
-      if websocket in clients:
-        clients.remove(websocket)
-      print("connection closed")
+      await close_conn(websocket)
     except websockets.exceptions.ConnectionClosedError:
-      if websocket in clients:
-        clients.remove(websocket)
-      print("connection closed")
+      await close_conn(websocket)
     finally:
       pass
 
+# Main
 async def main():
   async with websockets.serve(handle_connections, host, port):
     await asyncio.Future()
