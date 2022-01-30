@@ -8,9 +8,8 @@ vapor is a simple websocket extension for Scratch 3.0.
 ### server (linux)
 ```
 git clone https://github.com/satyrnsstuff/vapor.git
-cd vapor/server
-npm install git+https://github.com/uNetworking/uWebSockets.js.git#v20.6.0 underscore
-node server.js
+cd vapor
+npm start
 ```
 ### extension
 you can use one of these Scratch mods to install the extension:
