@@ -1,11 +1,11 @@
-// Variables
+// variables
 var wss = null
 var connected = 0
 var message = ""
 var username = ""
 var password = ""
 
-// Class
+// main class
 class vapor {
 	constructor(runtime) {
 		this.runtime = runtime
@@ -64,7 +64,7 @@ class vapor {
     }
   }
 
-  // Connected - Boolean
+  // connected - boolean
   connected_to_server() {
     if (connected == 1) {
       return true
@@ -73,7 +73,7 @@ class vapor {
     }
   }
 
-  // Connect To Server - Command
+  // connect to server - command
   connect_to_server({url}) {
     wss = new WebSocket(url)
     wss.onopen = function() {
@@ -84,24 +84,24 @@ class vapor {
     }
   }
 
-  // Get Data From URL - Reporter
+  // get data from url - reporter
   get_url_data({url}) {
     return fetch(url).then(response => response.text())
   }
 
-  // Current Message - Reporter
+  // current message - reporter
   get_current_message() {
     return message
   }
 
-  // Send Message - Command
+  // send message - command
   send_message({msg}) {
     if (connected == 1) {
       wss.send(String(msg))
     }
   }
 
-  // Disconnect From Server - Command
+  // disconnect from server - command
   disconnect_from_server() {
     if (connected == 1) {
       wss.close(1000)
@@ -115,5 +115,5 @@ class vapor {
   }
 }
 
-// Register Extension
+// register extension
 Scratch.extensions.register(new vapor())
