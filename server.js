@@ -8,12 +8,10 @@ const index_page = "index.html"
 const port = 3000
 var clients = []
 var clients_acc = []
-const blocked_ips = ab2str(b2ab(fs.readFileSync("block.txt"))).split("\n")
 
 // convert an ArrayBuffer to a string
-function ab2str (arraybuffer, encoding) {
-	if (encoding == null) encoding = 'utf8'
-	return Buffer.from(arraybuffer).toString(encoding)
+function ab2str (arraybuffer) {
+	return Buffer.from(arraybuffer).toString("utf8")
 }
 
 // convert a string to an ArrayBuffer
@@ -36,39 +34,84 @@ function b2ab (buf) {
 	return array.buffer
 }
 
-// websocket stuff
+// websocket
 uws.App({}).ws("/*", {
   idleTimeout: 100,
   maxBackpressure: 1024,
   maxPayloadLength: 512,
   compression: uws.DEDICATED_COMPRESSOR_4KB,
   open: (ws) => {
-    const ip = ab2str(ws.getRemoteAddressAsText())
-    if (blocked_ips.includes(ip)) {
-      ws.send(str2ab("conn_deny"), true)
-      console.log(`new connection denied | origin: ${ip}`)
-    } else {
-      console.log(`new connection accepted | origin: ${ip}`)
-      clients.push(ws)
-    }
+    clients.push(ws)
+    clients_acc.push("")
+    console.log("new connection accepted")
   },
   message: (ws, message, isBinary) => {
-    const str_msg = ab2str(message)
-    const ip = ab2str(ws.getRemoteAddressAsText())
-    if (str_msg === "ping") {
+    const msg = ab2str(message)
+    const split_msg = msg.split(" ")
+
+    /*
+    anything beyond this point can be changed to fit your needs.
+    
+    functions implemented here:
+    - ping (sends back "pong")
+    - acc_reg <username> <password> (registers an account)
+    - acc_login <username> <password> (logs into an account)
+    
+    this can be changed, removed, or more can be added if needed.
+    */
+
+    if (msg === "ping") {
       ws.send(str2ab("pong"), isBinary, true)
+    } else if (split_msg[0] === "acc_reg") {
+      if (!fs.existsSync("accounts")) {
+        fs.mkdirSync("accounts")
+      }
+      const files = fs.readdirSync("accounts")
+      const username = split_msg[1]
+      if (files.includes(`${username}.txt`)) {
+        ws.send(str2ab("acc_exist"), isBinary, true)
+        console.log(`attempted to register already existing account ${username}`)
+      } else {
+        process.chdir("accounts")
+        fs.writeFileSync(`${username}.txt`, split_msg[2])
+        process.chdir("..")
+        console.log(`new account ${username} registered`)
+      }
+    } else if (split_msg[0] === "acc_login") {
+      if (!fs.existsSync("accounts")) {
+        ws.send(str2ab("acc_not_exist"), isBinary, true)
+      } else {
+        const files = fs.readdirSync("accounts")
+        const username = split_msg[1]
+        if (!files.includes(`${username}.txt`)) {
+          ws.send(str2ab("acc_not_exist"), isBinary, true)
+        } else {
+          process.chdir("accounts")
+          const account_data = ab2str(b2ab(fs.readFileSync(`${username}.txt`)))
+          process.chdir("..")
+          if (!account_data.includes(split_msg[2])) {
+            ws.send(str2ab("wrong_pass"), isBinary, true)
+          } else {
+            ws.send(str2ab(_.without(account_data.split("\n"), split_msg[2])), isBinary, true)
+            clients_acc[clients.indexOf(ws)] = username
+            console.log(`account ${username} logged in`)
+          }
+        }
+      }
+    } else {
+      ws.send(str2ab("cmd_invalid"), isBinary, true)
     }
   },
   drain: (ws) => {
-    console.log('WebSocket backpressure: ' + ws.getBufferedAmount());
+    console.log(`ws backpressure: ${ws.getBufferedAmount()}`);
   },
   close: (ws, code, message) => {
-    const ip = ab2str(ws.getRemoteAddressAsText())
+    clients_acc = _.without(clients_acc, clients_acc[clients.indexOf(ws)])
     clients = _.without(clients, ws)
-    console.log(`connection closed | origin: ${ip}`);
+    console.log("connection closed");
   }
-}).get('/*', (res, req) => {
-  res.writeStatus('200 OK').writeHeader("Content-Type", "text/html").end(b2ab(fs.readFileSync(index_page)))
+}).get("/*", (res, req) => {
+  res.writeStatus("200 OK").writeHeader("Content-Type", "text/html").end(b2ab(fs.readFileSync(index_page)))
 }).listen(port, (listenSocket) => {
   if (listenSocket) {
     console.log(`vapor is now running at wss://0.0.0.0:${port}/`)

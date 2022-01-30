@@ -81,9 +81,6 @@ class vapor {
     }
     wss.onmessage = function(event) {
       message = String(event.data)
-      if (message == "conn_deny") {
-        disconnect_from_server()
-      }
     }
   }
 
