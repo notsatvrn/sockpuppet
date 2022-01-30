@@ -1,11 +1,9 @@
 # vapor
 vapor is a simple websocket extension for Scratch 3.0.
-
 ## features
 - connecting and disconnecting from a websocket server
 - sending messages to a websocket server
 - getting the contents of a URL
-
 ## how to use
 ### server (linux)
 ```
@@ -14,7 +12,6 @@ cd vapor/server
 npm install git+https://github.com/uNetworking/uWebSockets.js.git#v20.6.0 underscore
 node server.js
 ```
-
 ### extension
 you can use one of these Scratch mods to install the extension:
 - [adacraft](https://adacraft.org/studio)
