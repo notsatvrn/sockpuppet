@@ -42,25 +42,30 @@ uws.App({}).ws("/*", {
   maxBackpressure: 1024,
   maxPayloadLength: 512,
   compression: uws.DEDICATED_COMPRESSOR_4KB,
+  open: (ws) => {
+    const ip = ab2str(ws.getRemoteAddressAsText())
+    if (blocked_ips.includes(ip)) {
+      ws.send(str2ab("conn_deny"), true)
+      console.log(`new connection denied | origin: ${ip}`)
+    } else {
+      console.log(`new connection accepted | origin: ${ip}`)
+      clients.push(ws)
+    }
+  },
   message: (ws, message, isBinary) => {
     const str_msg = ab2str(message)
     const ip = ab2str(ws.getRemoteAddressAsText())
-    if (str_msg === "conn_new") {
-      if (blocked_ips.includes(ip)) {
-        ws.send(str2ab("conn_deny"), isBinary, true)
-        console.log(`new connection denied | origin: ${ip}`)
-      } else {
-        ws.send(str2ab("conn_accept"), isBinary, true)
-        console.log(`new connection accepted | origin: ${ip}`)
-        clients.push(ws)
-      }
-    } else if (str_msg === "ping") {
+    if (str_msg === "ping") {
       ws.send(str2ab("pong"), isBinary, true)
     }
   },
+  drain: (ws) => {
+    console.log('WebSocket backpressure: ' + ws.getBufferedAmount());
+  },
   close: (ws, code, message) => {
+    const ip = ab2str(ws.getRemoteAddressAsText())
     clients = _.without(clients, ws)
-    console.log('WebSocket closed');
+    console.log(`connection closed | origin: ${ip}`);
   }
 }).get('/*', (res, req) => {
   res.writeStatus('200 OK').writeHeader("Content-Type", "text/html").end(b2ab(fs.readFileSync(index_page)))

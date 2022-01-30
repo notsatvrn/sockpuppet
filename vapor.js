@@ -76,14 +76,13 @@ class vapor {
   // Connect To Server - Command
   connect_to_server({url}) {
     wss = new WebSocket(url)
-    wss.onopen = function() {}
+    wss.onopen = function() {
+      connected = 1
+    }
     wss.onmessage = function(event) {
       message = String(event.data)
       if (message == "conn_deny") {
         disconnect_from_server()
-      } else if (message == "conn_accept") {
-        connected = 1
-        message = ""
       }
     }
   }
