@@ -53,7 +53,7 @@ class vapor {
         arguments: {
           url: {
             type: Scratch.ArgumentType.STRING,
-            defaultValue: "https://satyrnsstuff.github.io/vapor/list.txt",
+            defaultValue: "https://satyrnsstuff.github.io/vapor/helloworld.txt",
           },
         },
       }, {
