@@ -22,5 +22,3 @@ you can use one of these Scratch mods to install the extension:
 - [E羊icques](https://sheeptester.github.io/scratch-gui/)
 
 add the extension using the URL `https://satyrnsstuff.github.io/vapor/ext.js`.
-
-you can add a custom extension by clicking the addons button in the lower left corner, and clicking "Custom Extension".
