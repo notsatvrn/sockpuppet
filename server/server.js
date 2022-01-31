@@ -20,7 +20,7 @@ const uws = require("uWebSockets.js")
 const _ = require("underscore")
 
 // settings
-const index_page = "index.html"
+const index_page = "./server/index.html"
 const port = 3000
 
 // variables
@@ -33,29 +33,30 @@ var hbs = null
 
 // convert to arraybuffer - credit: jhiesey + dy
 function to_ab(data) {
-	if (data instanceof Uint8Array) {
-		if (data.byteOffset === 0 && data.byteLength === data.buffer.byteLength) {
-			return data.buffer
-		} else if (typeof data.buffer.slice === 'function') {
-			return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength)
-		}
-	} else {
+  if (data instanceof Uint8Array) {
+    if (data.byteOffset === 0 && data.byteLength === data.buffer.byteLength) {
+      return data.buffer
+    }
+    else if (typeof data.buffer.slice === "function") {
+      return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength)
+    }
+  } else {
     const len = data.length
     var array = new Uint8Array(len)
-    if (typeof(data) === "string") {
-	    for (var i = 0; i < len; i++) {
-		    array[i] = data.charCodeAt(i)
-	    }
+    if (typeof data === "string") {
+      for (var i = 0; i < len; i++) {
+        array[i] = data.charCodeAt(i)
+      }
     } else {
-	    for(var i = 0; i < len; i++) {
-		    array[i] = data[i]
-	    }
+      for (var i = 0; i < len; i++) {
+        array[i] = data[i]
+      }
     }
-	  return array.buffer
+    return array.buffer
   }
 }
 
-// import pug/handlebars if needed
+// import pug/handlebars plugins if needed
 switch (index_ext) {
   case ".pug":
     pug = require("pug")
@@ -102,9 +103,7 @@ uws.App({}).ws("/*", {
     if (msg === "ping") {
       ws.send(to_ab("pong"), isBinary, true)
     } else if (split_msg[0] === "acc_reg") {
-      if (!fs.existsSync("accounts")) {
-        fs.mkdirSync("accounts")
-      }
+      if (!fs.existsSync("accounts")) { fs.mkdirSync("accounts") }
       const files = fs.readdirSync("accounts")
       const username = split_msg[1]
       if (files.includes(`${username}.txt`)) {
@@ -146,18 +145,14 @@ uws.App({}).ws("/*", {
       console.log("invalid message recieved")
     }
   },
-  drain: (ws) => {
-    console.log(`websocket backpressure: ${ws.getBufferedAmount()}`)
-  },
+  drain: (ws) => { console.log(`websocket backpressure: ${ws.getBufferedAmount()}`) },
   close: (ws, code, message) => {
     clients_acc = _.without(clients_acc, clients_acc[clients.indexOf(ws)])
     clients = _.without(clients, ws)
     console.log("connection closed")
-  }
+  },
 }).get("/", (res, req) => {
   res.writeStatus("200 OK").writeHeader("Content-Type", "text/html").end(get_index_contents())
 }).listen(port, (listenSocket) => {
-  if (listenSocket) {
-    console.log(`vapor is now running at wss://0.0.0.0:${port}/`)
-  }
+  if (listenSocket) { console.log(`vapor is now running at wss://0.0.0.0:${port}/`) }
 })
