@@ -5,12 +5,9 @@ vapor is a simple websocket extension for Scratch 3.0.
 - sending messages to a websocket server
 - getting the contents of a URL
 ## how to use
-### server (linux)
-```
-git clone https://github.com/satyrnsstuff/vapor.git
-cd vapor
-npm start
-```
+### server
+for a websocket/https server, you may use [tarantula](https://github.com/GalaxiaTeam/tarantula).
+
 ### extension
 you can use one of these Scratch mods to install the extension:
 - [adacraft](https://adacraft.org/studio)
