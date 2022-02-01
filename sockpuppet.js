@@ -6,7 +6,7 @@ var username = ""
 var password = ""
 
 // main class
-class vapor {
+class sockpuppet {
 	constructor(runtime) {
 		this.runtime = runtime
 	}
@@ -15,8 +15,8 @@ class vapor {
 	}
   getInfo() {
     return {
-      id: "vapor",
-      name: "vapor",
+      id: "sockpuppet",
+      name: "sockpuppet",
       blocks: [
       {
         opcode: "connect_to_server",
@@ -53,7 +53,7 @@ class vapor {
         arguments: {
           url: {
             type: Scratch.ArgumentType.STRING,
-            defaultValue: "https://satyrnsstuff.github.io/vapor/helloworld.txt",
+            defaultValue: "https://galaxia-team.github.io/sockpuppet/helloworld.txt",
           },
         },
       }, {
@@ -116,4 +116,4 @@ class vapor {
 }
 
 // register extension
-Scratch.extensions.register(new vapor())
+Scratch.extensions.register(new sockpuppet())

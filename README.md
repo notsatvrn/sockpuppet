@@ -1,4 +1,4 @@
-# vapor
+# sockpuppet
 a simple websocket extension for Scratch 3.0.
 
 ## features
@@ -12,4 +12,4 @@ you can use one of these Scratch mods to install the extension:
 - [TurboWarp](https://turbowarp.org/editor)
 - [E羊icques](https://sheeptester.github.io/scratch-gui/)
 
-add the extension using the URL `https://galaxia-team.github.io/vapor/vapor.js`.
+add the extension using the URL `https://galaxia-team.github.io/sockpuppet/sockpuppet.js`.
