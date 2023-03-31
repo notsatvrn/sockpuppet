@@ -1,15 +1,20 @@
-# sockpuppet
-a simple websocket extension for Scratch 3.0.
+# `sockpuppet`
+A simple websocket extension for Scratch 3.0.
 
-## features
-- connecting and disconnecting from a websocket server
-- sending messages to a websocket server
-- getting the contents of a URL
+## Features
+- Connecting and disconnecting from a websocket server.
+- Sending and receiving messages from a websocket server.
+- Getting the contents of a URL.
 
-## usage
-you can use one of these Scratch mods to install the extension:
+## Planned Features
+- Using multiple connections at once.
+- Storing a full log of all messages.
+
+## Usage
+You can use one of the following Scratch mods to install the extension.
+
 - [adacraft](https://adacraft.org/studio)
 - [TurboWarp](https://turbowarp.org/editor)
 - [E羊icques](https://sheeptester.github.io/scratch-gui/)
 
-add the extension using the URL `https://galaxia-team.github.io/sockpuppet/sockpuppet.js`.
+Add the extension using the URL `https://notsatvrn.github.io/sockpuppet/sockpuppet.js`.

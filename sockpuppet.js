@@ -1,119 +1,120 @@
-// variables
-var wss = null
-var connected = 0
-var message = ""
-var username = ""
-var password = ""
+// Variables which will be used.
+let wss = null
+let connected = false
+let message = ""
+let username = ""
+let password = ""
 
-// main class
+// The main class.
 class sockpuppet {
-	constructor(runtime) {
-		this.runtime = runtime
-	}
-	static get STATE_KEY() {
-		return "Scratch.websockets"
-	}
-  getInfo() {
-    return {
-      id: "sockpuppet",
-      name: "sockpuppet",
-      blocks: [
-      {
-        opcode: "connect_to_server",
-        blockType: Scratch.BlockType.COMMAND,
-        text: "connect to server [url]",
-        arguments: {
-          url: {
-            type: Scratch.ArgumentType.STRING,
-            defaultValue: "ws://127.0.0.1:3000",
-          },
-        },
-      }, {
-        opcode: "send_message",
-        blockType: Scratch.BlockType.COMMAND,
-        text: "send message [msg]",
-        arguments: {
-          msg: {
-            type: Scratch.ArgumentType.STRING,
-            defaultValue: "apple",
-          },
-        },
-      }, {
-        opcode: "disconnect_from_server",
-        blockType: Scratch.BlockType.COMMAND,
-        text: "disconnect",
-      }, {
-        opcode: "connected_to_server",
-        blockType: Scratch.BlockType.BOOLEAN,
-        text: "connected",
-      }, {
-        opcode: "get_url_data",
-        blockType: Scratch.BlockType.REPORTER,
-        text: "get data from url [url]",
-        arguments: {
-          url: {
-            type: Scratch.ArgumentType.STRING,
-            defaultValue: "https://galaxia-team.github.io/sockpuppet/helloworld.txt",
-          },
-        },
-      }, {
-        opcode: "get_current_message",
-        blockType: Scratch.BlockType.REPORTER,
-        text: "current message",
-      }],
+    constructor(runtime) {
+        this.runtime = runtime;
     }
-  }
 
-  // connected - boolean
-  connected_to_server() {
-    if (connected == 1) {
-      return true
-    } else {
-      return false
+    static get STATE_KEY() {
+        return "Scratch.websockets";
     }
-  }
 
-  // connect to server - command
-  connect_to_server({url}) {
-    wss = new WebSocket(url)
-    wss.onopen = function() {
-      connected = 1
+    getInfo() {
+        return {
+            id: "sockpuppet",
+            name: "sockpuppet",
+            blocks: [
+                {
+                    opcode: "connectToServer",
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: "Connect To Server [url]",
+                    arguments: {
+                        url: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: "ws://127.0.0.1:3000",
+                        },
+                    },
+                }, {
+                    opcode: "sendMessage",
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: "Send Message [msg]",
+                    arguments: {
+                        msg: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: "apple",
+                        },
+                    },
+                }, {
+                    opcode: "disconnectFromServer",
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: "Disconnect From Server",
+                }, {
+                    opcode: "connectedToServer",
+                    blockType: Scratch.BlockType.BOOLEAN,
+                    text: "Connected To Server?",
+                }, {
+                    opcode: "getDataFromURL",
+                    blockType: Scratch.BlockType.REPORTER,
+                    text: "Data From URL [url]",
+                    arguments: {
+                        url: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: "https://notsatvrn.github.io/sockpuppet/helloworld.txt",
+                        },
+                    },
+                }, {
+                    opcode: "getCurrentMessage",
+                    blockType: Scratch.BlockType.REPORTER,
+                    text: "Current Message",
+                }
+            ],
+        }
     }
-    wss.onmessage = function(event) {
-      message = String(event.data)
+    
+    // Connected To Server (boolean)
+    connectedToServer() {
+        return connected;
     }
-  }
 
-  // get data from url - reporter
-  get_url_data({url}) {
-    return fetch(url).then(response => response.text())
-  }
+    // Connect To Server (command)
+    connectToServer({url}) {
+        wss = new WebSocket(url);
 
-  // current message - reporter
-  get_current_message() {
-    return message
-  }
+        wss.onopen = function() {
+            connected = 1;
+        };
 
-  // send message - command
-  send_message({msg}) {
-    if (connected == 1) {
-      wss.send(String(msg))
+        wss.onmessage = function(event) {
+            message = String(event.data);
+        };
     }
-  }
 
-  // disconnect from server - command
-  disconnect_from_server() {
-    if (connected == 1) {
-      wss.close(1000)
-      connected = 0
-      message = ""
-      username = ""
-      password = ""
-      wss = null
-      new_message = 0
+    // Data From URL (reporter)
+    getDataFromURL({url}) {
+        return fetch(url).then(response => response.text());
     }
-  }
+
+    // Current Message (reporter)
+    getCurrentMessage() {
+        return message;
+    }
+
+    // Send Message (command)
+    sendMessage({msg}) {
+        if (connected) {
+            wss.send(String(msg));
+        };
+    }
+
+    // Disconnect From Server (command)
+    disconnectFromServer() {
+        if (connected) {
+            wss.close(1000);
+            connected = false;
+            message = "";
+            username = "";
+            password = "";
+            wss = null;
+            new_message = 0;
+        };
+    }
 }
 
-// register extension
+// Register the extension.
 Scratch.extensions.register(new sockpuppet())
